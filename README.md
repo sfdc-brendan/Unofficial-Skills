@@ -4,7 +4,6 @@ Field-tested agent skills for Salesforce demo and Agentforce work. These are **n
 
 Packs are grouped by **product**. Each pack installs from its own folder. Product folders also have an installer that pulls every pack in that group.
 
-Migrated from [Demo-Lab](https://github.com/sfdc-brendan/Demo-Lab). Demo metadata (LWCs, Apex, Flows) stays there. Skills live here.
 
 ```
 Unofficial-Skills
