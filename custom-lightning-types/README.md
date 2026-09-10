@@ -2,7 +2,16 @@
 
 Unofficial skill pack for **Apex-based Custom Lightning Types** on Agentforce chat surfaces.
 
-A Custom Lightning Type (CLT) is how an Agentforce action stops narrating JSON as prose and instead mounts an LWC — a card, a picker, a diagnostics panel — inside the chat host. This pack teaches an agent to **generate** those artifacts and **debug** them when they render as text. It also documents the SRA-panel write-back that lets a card button send an utterance into the assistant as if the rep typed it.
+A Custom Lightning Type (CLT) is how an Agentforce action stops narrating JSON as prose and instead mounts an LWC — a card, a picker, a diagnostics panel — inside the chat host. **The same card can render on all four Agentforce chat surfaces:**
+
+- **Enhanced Chat v2** (customer widget)
+- **Service Rep Assistant** (LEX panel)
+- **Employee Agent chat** (LEX panel)
+- **Agentforce Cowork**
+
+The Apex envelope is one pattern. What differs by surface is write-back (whether a button can talk back to the host), sharing, and the run-as user — not whether the card can show up.
+
+This pack teaches an agent to **generate** those artifacts and **debug** them when they render as text. It also documents SRA-panel write-back: a card button that sends an utterance into the assistant as if the rep typed it.
 
 **Not in this pack:** object-schema Lightning Types for Experience Builder, Prompt Builder, or Mosaic. Those are a different binding.
 
@@ -43,7 +52,7 @@ Read **[docs/HOW-IT-WORKS.md](./docs/HOW-IT-WORKS.md)** before you generate anyt
 1. The four artifacts and why their names must join explicitly
 2. The JSON-string envelope (the pattern that actually deploys)
 3. Why the planner must emit `show_command` or the LWC never mounts
-4. Surfaces: SRA, Employee LEX, Enhanced Chat v2, Cowork — **write-back APIs are not portable**
+4. Where cards render (all four surfaces) vs where buttons can write back (not portable)
 5. SRA chat write-back: `acc:execute` vs `copytochat` vs sending to the customer
 6. Deploying the metadata to an org, and the checklist for a card that renders as text
 

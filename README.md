@@ -6,7 +6,7 @@ Field-tested agent skills for Salesforce demo and Agentforce work. These are **n
 
 | Pack | What it teaches an agent to do |
 |------|--------------------------------|
-| **[Custom Lightning Types](./custom-lightning-types/)** | Build and debug Apex-based CLT cards for Service Rep Assistant, Employee Agent, Enhanced Chat v2, and Cowork. Includes how a card writes back into the SRA chat panel. |
+| **[Custom Lightning Types](./custom-lightning-types/)** | Build and debug Apex-based CLT cards that **render** on Enhanced Chat v2, Service Rep Assistant, Employee Agent chat, and Agentforce Cowork. Includes SRA chat write-back. |
 
 ## Install
 

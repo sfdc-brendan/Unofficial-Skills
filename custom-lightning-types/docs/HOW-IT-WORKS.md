@@ -2,6 +2,8 @@
 
 This is the field-tested model for **Apex-based** Custom Lightning Types (CLTs) on Agentforce chat surfaces. It is the contract `sf-clt-builder` generates and `agentforce-lightning-types` debugs.
 
+A CLT card **renders** on Enhanced Chat v2, Service Rep Assistant, Employee Agent chat, and Agentforce Cowork. Write-back (buttons talking to the host) is per-surface and is documented separately below.
+
 Salesforce's published channel table is [Lightning Type UI Configuration](https://developer.salesforce.com/docs/platform/lightning-types/guide/lightning-types-ui-config.html). Everything below that table — envelope, display flags, ShowCommand, SRA write-back — is what you need in a working org that the compatibility table does not spell out.
 
 ---
@@ -10,16 +12,27 @@ Salesforce's published channel table is [Lightning Type UI Configuration](https:
 
 An Agentforce action can return structured data. Without a Lightning Type, the planner **narrates** that data as chat text. With a Lightning Type, the host **mounts an LWC** and passes the Apex payload in as `@api value`.
 
+**Cards render on all four Agentforce chat surfaces.** One envelope (`lightningDesktopGenAi` renderer + `lightning__AgentforceOutput` LWC) is what the host mounts. The surfaces are:
+
+| Surface | Who sees the card |
+|---------|-------------------|
+| **Enhanced Chat v2** | External customer in the web chat widget |
+| **Service Rep Assistant** | Service rep in the LEX / Service Console panel |
+| **Employee Agent chat** | Internal user in the LEX Employee Agent panel |
+| **Agentforce Cowork** | Internal user in Cowork |
+
+Write-back (a button talking back to the host) is a separate, surface-specific layer. See [section 5](#5-surfaces--cards-render-everywhere-write-back-does-not).
+
 ```mermaid
 flowchart TD
   utterance[Rep or customer utterance] --> planner[Planner picks an action]
   planner --> apex[Invocable Apex returns a DTO]
   apex --> lt[Lightning Type schema plus renderer]
   lt --> lwc[LWC mounts in the chat host]
-  lwc -->|"SRA: acc:execute / copytochat"| panel[SRA chat panel]
-  lwc -->|"SRA messaging: conversationToolkitApi"| customer[Customer conversation]
-  lwc -->|"Employee LEX: lightning/accApi"| emp[Employee agent panel]
-  lwc -->|"ECv2: configuration.util.sendTextMessage"| widget[Enhanced Chat widget]
+  lwc --> ecv2[Enhanced Chat v2]
+  lwc --> sra[Service Rep Assistant]
+  lwc --> emp[Employee Agent chat]
+  lwc --> cowork[Agentforce Cowork]
 ```
 
 The LWC is not on a record page. It is a renderer inside the Agentforce host. That is why its `js-meta.xml` targets `lightning__AgentforceOutput` (and `lightning__AgentforceInput` if it also collects input) and **not** `lightning__RecordPage`.
@@ -129,16 +142,18 @@ Keep topic instructions otherwise short. Diagnose in the browser Network tab on 
 
 ---
 
-## 5. Surfaces — write-back is not portable
+## 5. Surfaces — cards render everywhere; write-back does not
 
-The Apex envelope is the same everywhere. The **write-back API is not**. A component hard-wired to one host is silent on the others.
+The same CLT **shows up** on Enhanced Chat v2, Service Rep Assistant, Employee Agent chat, and Agentforce Cowork. The Apex envelope does not change.
+
+What **is** per-surface: the write-back API (if any), sharing, and the run-as user. A button wired to one host is silent on the others. Do not confuse “the card did not render” with “the button did nothing.”
 
 | Surface | Channel folder | Write-back | Run-as |
 |---------|----------------|------------|--------|
-| **Service Rep Assistant** (LEX panel, actions execute) | `lightningDesktopGenAi` only | `copytochat` / `acc:execute` (undocumented). Customer send via `lightning/conversationToolkitApi` | `without sharing`; permset on EinsteinServiceAgent **and** the rep |
-| **Employee Agent LEX panel** | same | `execute(utterance, botId)` from `lightning/accApi` (documented). Do not assume `copytochat` works | logged-in user; `with sharing` unless proven otherwise |
 | **Enhanced Chat v2** | same; do **not** add `enhancedWebChat/` | `this.configuration?.util.sendTextMessage(...)` | portal user or botUser — permset the user the session actually runs as |
-| **Agentforce Cowork** | treat as Employee LEX | **None verified.** Display-only or `NavigationMixin` | logged-in user |
+| **Service Rep Assistant** (LEX panel, actions execute) | `lightningDesktopGenAi` only | `copytochat` / `acc:execute` (undocumented). Customer send via `lightning/conversationToolkitApi` | `without sharing`; permset on EinsteinServiceAgent **and** the rep |
+| **Employee Agent chat** (LEX panel) | same | `execute(utterance, botId)` from `lightning/accApi` (documented). Do not assume `copytochat` works | logged-in user; `with sharing` unless proven otherwise |
+| **Agentforce Cowork** | same envelope; card **does** render | **None verified** for write-back. Display-only or `NavigationMixin` | logged-in user |
 
 Confirm you are on the Agentforce agent in the LEX panel (topics whose actions **execute**), not the Case-page Service Assistant component (actions there are grounding only).
 
