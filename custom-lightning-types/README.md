@@ -15,27 +15,27 @@ This pack teaches an agent to **generate** those artifacts and **debug** them wh
 
 **Not in this pack:** object-schema Lightning Types for Experience Builder, Prompt Builder, or Mosaic. Those are a different binding.
 
-## Install in 30 seconds
+Compatible with **Cursor**, **Claude Code**, **Windsurf**, **Codex**, and any AI coding agent with a skills directory.
 
-From this folder, or from the repo root with `./install.sh custom-lightning-types`:
+---
+
+## Quick Install
+
+Copy and paste into your terminal:
 
 ```bash
-chmod +x install.sh
-./install.sh --all
+curl -sSL https://raw.githubusercontent.com/sfdc-brendan/Unofficial-Skills/main/custom-lightning-types/install.sh | bash
 ```
 
-| Flag | What it does |
-|------|----------------|
-| `--all` | Install into every tool detected on this machine (Cursor, Claude Code, Codex) |
-| `--cursor` | `~/.cursor/skills/` plus the Cursor rule in `~/.cursor/rules/` |
-| `--claude` | `~/.claude/skills/` (Claude Code) |
-| `--codex` | `~/.codex/skills/` |
-| `--project [DIR]` | Install into a project's `.cursor/` / `.claude/` instead of the user home |
-| `--symlink` | Point the skill dirs at this clone so `git pull` updates them |
-| `--dry-run` | Print the plan, write nothing |
-| `--uninstall` | Remove the skills and rule this pack installed |
+Or with `wget`:
 
-New agent session after install. Cursor and Claude Code load user skills at session start.
+```bash
+wget -qO- https://raw.githubusercontent.com/sfdc-brendan/Unofficial-Skills/main/custom-lightning-types/install.sh | bash
+```
+
+The installer auto-detects your IDE (Cursor, Claude Code, Windsurf, Codex) and installs **only** this pack: `sf-clt-builder`, `agentforce-lightning-types`, and the Cursor rule. No git clone required. Restart your IDE after installing.
+
+---
 
 ## What gets installed
 
@@ -44,6 +44,8 @@ New agent session after install. Cursor and Claude Code load user skills at sess
 | `sf-clt-builder` | Generate the DTO, Invocable, Lightning Type bundle, LWC, and GenAiFunction. Pick the surface first. |
 | `agentforce-lightning-types` | Debug a card that deploys but will not render (ShowCommand vs InformCommand, ECv2 Connection, ESD republish). |
 | `agentforce-lightning-types.mdc` | Cursor rule that fires on `lightningTypes/**` files so envelope mistakes get caught while editing. |
+
+---
 
 ## How it works
 
@@ -58,15 +60,67 @@ Read **[docs/HOW-IT-WORKS.md](./docs/HOW-IT-WORKS.md)** before you generate anyt
 
 Official Salesforce reference for the channel folders: [Lightning Type UI Configuration](https://developer.salesforce.com/docs/platform/lightning-types/guide/lightning-types-ui-config.html).
 
+---
+
+## Installation
+
+### One-Line Install (Recommended)
+
+```bash
+curl -sSL https://raw.githubusercontent.com/sfdc-brendan/Unofficial-Skills/main/custom-lightning-types/install.sh | bash
+```
+
+Downloads this folder from GitHub and installs the skills. Auto-detects Cursor (`~/.cursor/skills/`), Claude Code (`~/.claude/skills/`), Windsurf (`~/.windsurf/skills/`), and Codex (`~/.codex/skills/`). No git clone required.
+
+### Install From Clone
+
+```bash
+git clone https://github.com/sfdc-brendan/Unofficial-Skills.git
+cd Unofficial-Skills/custom-lightning-types
+bash install.sh
+```
+
+When run from a local clone, the installer copies files directly instead of downloading.
+
+### Manual Install
+
+```bash
+# Cursor
+cp -R sf-clt-builder agentforce-lightning-types ~/.cursor/skills/
+cp rules/agentforce-lightning-types.mdc ~/.cursor/rules/
+
+# Claude Code
+cp -R sf-clt-builder agentforce-lightning-types ~/.claude/skills/
+
+# Windsurf
+cp -R sf-clt-builder agentforce-lightning-types ~/.windsurf/skills/
+```
+
+---
+
 ## Ask the agent
 
-Once the skills are installed:
+Once the skills are installed, start a new agent session and try:
 
 > Build a Custom Lightning Type for the Service Rep Assistant that shows appointment windows and books the selected slot.
 
 > This CLT deploys but the agent just describes the data in text. Debug it.
 
 > Add a Book button that sends an utterance into the SRA panel so the planner runs Book Technician Visit.
+
+---
+
+## Updating
+
+Re-run the one-liner to update to the latest version:
+
+```bash
+curl -sSL https://raw.githubusercontent.com/sfdc-brendan/Unofficial-Skills/main/custom-lightning-types/install.sh | bash
+```
+
+The installer overwrites existing skill files with the latest versions from GitHub.
+
+---
 
 ## Disclaimer
 
