@@ -1,4 +1,5 @@
 # Agentforce
+Update Sept 2026 - Agentforce can now natively ingests images and analyze them - hurray! Move forward below if wanted to install Vision with that being known.
 
 Skills for building Agentforce agents, Agent API integrations, vision, and Agentforce Contact Center (native Salesforce Voice).
 
