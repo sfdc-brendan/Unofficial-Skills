@@ -1,0 +1,88 @@
+---
+description: Envelope and debug rules for Apex-based Custom Lightning Types (CLTs) on Agentforce chat surfaces — Enhanced Chat v2, Employee Agent (LEX), Mobile, SRA. Generate new cards with sf-clt-builder; this rule is the binding contract plus runtime gotchas.
+globs:
+  - "**/lightningTypes/**"
+  - "**/lightningTypes/**/schema.json"
+  - "**/lightningTypes/**/renderer.json"
+  - "**/lightningTypes/**/editor.json"
+  - "**/lwc/**/*.js-meta.xml"
+alwaysApply: false
+---
+
+# Agentforce Lightning Types (Cursor Rule)
+
+Apex-based CLTs for Agentforce chat surfaces. Follow the **JSON-string envelope**. The legacy `sourceType`/`lightning__listType` binding breaks renderer registration; don't use it.
+
+**Generate** a new card with `sf-clt-builder` (surface adapter, templates, GenAiFunction flags). **Debug** a card that will not render with `agentforce-lightning-types` (ECv2 Connection, ESD republish, ShowCommand). Cowork write-back is unverified — display-only / `NavigationMixin`.
+
+## When to apply
+- "Lightning Type", "CLT", "agent chat UI", "Agentforce render", "custom output rendering".
+- Files in `lightningTypes/**`, or an LWC `js-meta.xml` with `lightning__AgentforceInput`/`lightning__AgentforceOutput`.
+
+## When NOT to apply
+- Object-based CLTs for Experience Builder / Prompt Builder / Mosaic.
+- MIAW (non–Chat V2). Plain LWCs on record/app/home pages.
+
+## Dual naming
+- **Apex DTO class** (`SummitRidgeEquipmentOutput`) ← LT `schema.json` `@apexClassType/c__<Class>`
+- **LT folder** (`summitRidgeEquipmentOutput`) ← GenAi output `lightning:type` `c__<folder>`
+- **LWC** (`summitRidgeEquipmentCard`) ← `renderer.json` `c/<lwc>`
+- **JSON field** (`equipmentJSON`) ← LWC `this.value.equipmentJSON`
+
+## File structure
+```
+lightningTypes/<Type>/
+  <Type>.lightningType-meta.xml   # working deploys; some docs say lightningTypeBundle-meta.xml
+  schema.json
+  lightningDesktopGenAi/
+    renderer.json                 # ONLY this folder. Do NOT add enhancedWebChat/.
+    editor.json                   # only if collecting input
+```
+New LWCs: apiVersion **67.0**. Bundle floor 64.0+. Agentforce targets 62.0+.
+
+## Envelope
+Renderer DTO: `global`, `@JsonAccess(serializable='always' deserializable='always')`, ONE `@AuraEnabled String`. Two constructors. Never share across renderers.
+
+```apex
+@JsonAccess(serializable='always' deserializable='always')
+global class Acme_AccountHealthData {
+    @AuraEnabled global String healthJSON;
+    global Acme_AccountHealthData(String j) { this.healthJSON = j; }
+    global Acme_AccountHealthData() { this.healthJSON = ''; }
+}
+```
+
+Action `Response` fields use `@InvocableVariable`. Displayable field is typed as the **DTO class**, always populated (sentinel `{"error":"..."}` on failure). Pair with 2–3 planner passthrough scalars.
+
+**Display flags (two independent flags):** card `isDisplayable: true` / `isUsedByPlanner: false` (Path B: `is_displayable: True` / `filter_from_agent: True`). Passthroughs inverse. `is_displayable` gates the render tool; filtering hides JSON so the planner does not narrate it.
+
+`schema.json`: `"lightning:type": "@apexClassType/c__<DtoClass>"`. Use `c__` at creation.
+
+`renderer.json`:
+```json
+{ "renderer": { "componentOverrides": { "$": { "definition": "c/acmeAccountHealth" } } } }
+```
+`lightningDesktopGenAi/` ONLY. No `attributes`. No `enhancedWebChat/` — the compatibility table lists it as valid, but adding it has broken working desktop configs. ECv2 falls back to desktop when it is missing (privacy: a rep card can reach a customer).
+
+## LWC
+Targets only `lightning__AgentforceOutput`(+`Input`). No `sourceType`/`targetConfigs`/`lightningSnapin__ChatMessage`. Simple `@api value`; parse in `connectedCallback` with `typeof raw === 'string' ? JSON.parse(raw) : raw`. Design at ~380px.
+
+**Write-back is surface-specific** — do not default to `embeddedservice_bootstrap`:
+- ECv2: `this.configuration?.util.sendTextMessage(...)`
+- SRA: `copytochat` / `acc:execute`; Messaging send via `conversationToolkitApi` (`!== false`)
+- Employee LEX: `lightning/accApi` `execute()`
+- Cowork: none verified
+
+## ShowCommand vs InformCommand
+The planner decides whether the LWC mounts. Vague instructions → InformCommand (`result: []`). Put `show_command` language on the action description + LT `schema.json` description; keep topic instructions minimal. Diagnose: Network → `messages/stream` → `result: []`. Switch console context to the Agentforce Messaging **iframe**.
+
+## Deploy / permset / test
+Path A: DTO → (LT+LWC) → GenAiFunction → permset → **deactivate agent** → planner → reactivate.
+Path B: DTO → service → (LT+LWC) → permset → `sf agent validate` → publish → activate.
+- EinsteinServiceAgent → permset on `<botUser>` (`--on-behalf-of`). Employee/Cowork → logged-in users.
+- Builder preview **can** render CLTs as of 262 (AEA always; ASA when connected to ECv2). Always confirm on the real surface. Republish the ESD after every change.
+
+## Reference
+- Path A / SRA: Summit Ridge (8 `summitRidge*Output` types) — generate via `sf-clt-builder`.
+- Path B / Employee: LEA `LEA_AccountHealth` + `LEA_DailyPriorities`.
+- Debug: `~/.claude/skills/agentforce-lightning-types/`. Surfaces: `sf-clt-builder/guides/surfaces.md`.
