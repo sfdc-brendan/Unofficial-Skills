@@ -120,7 +120,7 @@ fi
 echo ""
 echo "==========================================="
 echo " Service Cloud installer"
-echo " Cases, Omni-Channel, Knowledge, Voice, intake, review"
+echo " Cases, Omni-Channel, Knowledge, Voice, Agentforce email, intake, review"
 echo "==========================================="
 echo ""
 echo " Source: $( [ "$MODE" = "local" ] && echo "local ($PACK_ROOT)" || echo "github.com/$REPO" )"

@@ -24,3 +24,7 @@ disable-model-invocation: true
 - Intake flow map from mailbox to assigned case.
 - Threading and duplicate-prevention policy.
 - Triage automation candidates and guardrails.
+
+## Additional Resources
+
+- For an Agentforce Service Agent that autonomously answers inbound email, use `sf-service-agentforce-email-orchestrator`.

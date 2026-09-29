@@ -6,7 +6,7 @@ Skills for Service Cloud implementation and Field Service. Contact-center **voic
 
 | Pack | What it covers |
 |------|----------------|
-| [core](./core/) | Cases, Service Console, Omni-Channel, Knowledge, entitlements, email, incidents, Voice/Messaging, AI intake, config APIs, review |
+| [core](./core/) | Cases, Service Console, Omni-Channel, Knowledge, entitlements, email, Agentforce for Email, incidents, Voice/Messaging, AI intake, config APIs, review |
 | [field-service](./field-service/) | Work orders, scheduling, dispatch, optimization, mobile technician, inventory, SLAs, service reports |
 
 ## Install everything in this product

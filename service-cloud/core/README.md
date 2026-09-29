@@ -1,6 +1,6 @@
 # Service Cloud Development Skills for Agentic Coding Tools
 
-A suite of 18 Agent Skills focused on Service Cloud implementation patterns, case operations, omni-channel routing, digital engagement, feature configuration APIs/CLIs, voice transcript integration, AI-assisted intake, and support operations quality.
+A suite of 22 Agent Skills focused on Service Cloud implementation patterns, case operations, omni-channel routing, digital engagement, Agentforce for Service on Email, feature configuration APIs/CLIs, voice transcript integration, AI-assisted intake, and support operations quality.
 
 Compatible with Cursor, Claude Code, Windsurf, and any AI coding agent with a skills directory.
 
@@ -41,6 +41,10 @@ Restart your IDE after installing.
 - `sf-service-messaging-conversation-toolkit`: Messaging API and Conversation Toolkit API design, implementation, and guardrails.
 - `sf-service-field-service-handoff`: Service Cloud to Field Service handoff patterns and feedback loops.
 - `sf-service-email-to-case`: Email-to-Case threading, auto-response, assignment, and triage hardening.
+- `sf-service-agentforce-email-orchestrator`: End-to-end build for Agentforce for Service on Email in an SDO/Tech IDO — Q-Brix order, phase gates, and hand-offs.
+- `sf-service-agentforce-email-routing`: Email-to-Case routing address owned by the Agentforce agent user, forwarding-address verification, Org-Wide Email Address, plain template.
+- `sf-service-agentforce-email-agent-connection`: Generative AI enablement and the Agentforce Service Agent Configuration on the routing address (the step most people miss).
+- `sf-service-agentforce-email-troubleshooting`: "No Case" vs "Case but no reply" triage, stuck verification, missing Q-Brix config, opaque agent errors, stray bounces.
 - `sf-service-incident-management`: Major incident intake, comms rhythm, swarm operations, closure workflow.
 - `sf-service-voice-toolkit` *(hybrid — code + planning)*: Real-time transcript integration — Voice Toolkit API subscribe/teardown, ConversationEntry SOQL with sequence water mark, polling fallback, debounce. Quick Start in SKILL.md, full event payloads + edge cases in reference.md.
 - `sf-service-models-api` *(hybrid — code + planning)*: Trust Layer GenAI via `aiplatform.ModelsAPI` — Apex service skeleton, JSON-mode prompting, response cleanup, test mock pattern. Quick Start in SKILL.md, full model catalog + retry + embeddings in reference.md.
@@ -62,6 +66,8 @@ Ask naturally, for example:
 - "Review this Service Cloud setup for operational risk."
 - "Plan a case-to-field-service dispatch handoff model."
 - "Design a Messaging API + Conversation Toolkit integration for agent handoff."
+- "Set up Agentforce for Service on Email in my SDO."
+- "My email created a Case but the Agentforce agent never replied — what's wrong?"
 - "Design a real-time transcript contract for an LWC on the VoiceCall page."
 - "Plan a Trust Layer GenAI prompt contract for case classification."
 - "Design a configurable AI-assisted intake template for roadside assistance calls."
@@ -73,4 +79,5 @@ Ask naturally, for example:
 ## Notes
 
 - Most of these skills are planning altitude (frameworks, no code) — pair them with `sf-apex`, `sf-lwc`, `sf-flow`, and `sf-deploy` for execution.
+- The four `sf-service-agentforce-email-*` skills are **runbook altitude** (Setup click-paths plus known Q-Brix gotchas), based on the TMT team's "Agentforce for Service on Email" SDO/Tech IDO setup guide.
 - Three skills are **hybrid altitude** (Quick Start code patterns in SKILL.md + deep reference in reference.md): `sf-service-voice-toolkit`, `sf-service-models-api`, `sf-service-ai-intake`. Use these directly for implementation — they contain copy-paste-ready Apex and LWC patterns proven in [sfdc-brendan/voice-intake-builder](https://github.com/sfdc-brendan/voice-intake-builder).

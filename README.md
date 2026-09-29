@@ -39,7 +39,7 @@ Case operations, digital engagement, and Field Service.
 
 | Pack | Skills | Install |
 |------|--------|---------|
-| [Core](./service-cloud/core/) | 18 | Cases, console, Omni-Channel, Knowledge, entitlements, Voice, intake, review |
+| [Core](./service-cloud/core/) | 22 | Cases, console, Omni-Channel, Knowledge, entitlements, Voice, Agentforce for Email, intake, review |
 | [Field Service](./service-cloud/field-service/) | 10 | Work orders, scheduling, mobile technician, inventory, SLAs |
 
 ```bash
